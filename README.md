@@ -1,75 +1,77 @@
-# configuracoes-gateway-ttn
+# Roteiro de Instalação e Configuração de Gateway LoRaWAN na The Things Network (TTN)
 
-![logo](https://github.com/mftutui/configuracoes-gateway-ttn/blob/master/images/logo.png)
+<!-- ![logo](images/logo.png) -->
+<div style="text-align: right">
+  <img src="images/logo.png" alt="logo" width="100">
+</div>
 
-Este tutorial foi produzido pelo **Instituto Federal de Santa Catarina (IFSC)** - Campus São José, juntamente com a **Fundação de Amparo à Pesquisa e Inovação do Estado de Santa Catarina (FAPESC)** a partir do projeto de pesquisa aplicada por meio do edital de chamada pública FAPESC - Nº 05/2017.
+Este material foi produzido pelo [Instituto Federal de Santa Catarina (IFSC) - Campus São José](https://www.sj.ifsc.edu.br), no contexto do projeto de [TTN-IFSC-SJE](https://github.com/arliones/TTN_IFSC_SJE). Este roteiro consiste em uma versão atualizada do roteiro desenvolvido em projeto anterior em parceria entre [IFSC e FAPESC](https://github.com/arliones/configuracoes-gateway-ttn/).
 
-Guia de configuração de Gateway LoRa na [TTN](https://www.thethingsnetwork.org/) utilizando módulo RHF0M301 RISINGHF.
+Este roteiro guia a configuração e instalação de um Gateway LoRaWAN na [TTN](https://www.thethingsnetwork.org/) utilizando o módulo RF RHF0M301 RISINGHF montado sobre uma RaspberryPi.
 
-[English version](https://github.com/mftutui/configuracoes-gateway-ttn/blob/master/README-en.md)
-
-### Importante
-📗 Leia o material todo antes de começar.
+## Importante
+📗 Leia este roteiro até o final antes de começar.
 
 ☺️ Caso encontre algum erro, tenha alguma sugestão ou dúvida, fique a vontade para entrar em contato.
 
-### Requisitos
+## Requisitos
 * Conhecimento básico em Linux
 * Acesso ao [GitHub](https://github.com/)
 * Acesso em [The Things Network](https://www.thethingsnetwork.org/)
+* Uma RaspberryPi 3 ou mais recente
+* Um módulo RF de gateway LoRaWAN modelo RisingHF RHF0M301.
 
-### Sumário
+## Sumário
 1. [Materiais utilizados](#Materiais-utilizados)
-	1. [Gateway](#Gateway)
-	2. [Configuração do gateway](#Configuração-do-gateway)
 2. [Iniciando](#Iniciando)
 3. [Montagem](#Montagem)
-4. [Configurações](#Configurações)
-	1. [Configurações do dispositivo](#Configurações-do-dispositivo)
-	2. [Utilização do gateway em *background*](#Utilização-do-gateway-em-*background*)
+4. [Configuração](#Configuração)
+   1. [Configuração da RPi](#Configuração-da-RPi)
+   2. [Configuração do *Gateway* LoRaWAN](#Configuração-do-*Gateway*-LoRaWAN)
 5. [Registro na TTN](#Registro-na-TTN)
 
-## Materiais utilizados
+# Materiais utilizados
 
-### Gateway
+* Cartão microSD [(especificações)](https://www.raspberrypi.org/documentation/installation/sd-cards.md).
+* Leitor de cartão microSD para laptop/desktop.
+* Raspberry Pi 3 Model B V1.2 (**RPi**).
+* Módulo Gateway LoRaWAN ([RHF0M301](https://www.robotshop.com/media/files/pdf/915mhz-lora-gateway-raspberry-pi-hat-datasheet1.pdf)) RISINGHF.
+* Adaptador para módulo RHF0M301 RISINGHF Gateway LoRaWAN.
+* Antena 915 MHz.
+* Duas fontes chaveadas 5V 3A com conector microUSB.
+![Materiais](images/gateway_componentes.jpg)
+* Para configuração do gateway também são necessários
+  * Monitor com entrada HDMI.
+  * Teclado USB.
+  * Cabo HDMI.
+  * Cabo de rede ou acesso a rede Wi-Fi.
 
-* Cartão SD [(especificações)](https://www.raspberrypi.org/documentation/installation/sd-cards.md)  
-* Raspberry Pi 3 Model B V1.2 (**RPi**)
-* Módulo Gateway LoRaWAN ([RHF0M301](https://www.robotshop.com/media/files/pdf/915mhz-lora-gateway-raspberry-pi-hat-datasheet1.pdf)) RISINGHF 
-* Adaptador para módulo RHF0M301 RISINGHF Gateway LoRaWAN
-* Antena 915 MHz
-* 2 fontes chaveadas 5V 3A
+# Iniciando
 
-![Materiais](https://github.com/mftutui/configuracoes-gateway-ttn/blob/master/images/gateway_componentes.jpg)
+Primeiramente é necessário preparar o cartão SD. O passo a passo detalhado pode ser seguido a partir do [link](https://www.raspberrypi.com/software/) e consiste em:
 
-### Configuração do gateway
+* Em um laptop/desktop, baixar e instalar o software Raspberry Pi Imager.
+* Inserir cartão de memória micro-SD no laptop/desktop.
+* Abrir o software RPi-Imager.
+* Selecionar o sistema operacional desejado: Raspberry Pi OS (32-bit).
+* Selecionar o cartão de memória que deseja gravar.
+* Clicar no botão "Write" e aguardar conclusão (pode levar muitos minutos, dependendo da velocidade da conexão com a Internet para baixar a imagem do sistema operacional).
 
-* Monitor 
-* Teclado
-* Cabo HDMI
+# Montagem
 
-## Iniciando
+Insira o cartao microSD gravado na RPi. Encaixe o adaptador, o módulo RF do gateway gateway e a antena. Este deve ser o resultado final do hardware:
 
-Primeiramente é necessário preparar o cartão SD. O passo a passo detalhado pode ser seguido a partir do [link](https://www.raspberrypi.org/documentation/installation/installing-images/README.md) e consiste em:
+![Gateway](images/gateway_montado.jpg)
 
-* Download da imagem (no caso, [Raspbian Stretch Lite](https://www.raspberrypi.org/downloads/raspbian/))
-* Escrita da imagem no cartão
+A encaixe entre a RPi e o adaptador e entre o adaptador e o módulo usando a placa adaptadora para módulo RHF0M301 RISINGHF acontece de forma perfeita (todos os pinos machos conectados aos fêmeas) sem a necessidade da utilização de jumpers, como pode ser visto na imagem.
 
-## Montagem
+Conecte a RPi e o adaptador às fontes de energia microUSB e ao cabo Ethernet (não energize o módulo LoRaWAN sem que a antena esteja conectada). 
 
-* Insira o cartao SD na RPi. Encaixe o adaptador, o módulo gateway e a antena. Ao final você deve ter algo parecido com isso: 
+> É recomendado que os equipamentos sejam fixados em uma caixa ambiental hermética para evitar dados de exposição ao Sol e humidade. Se fizer esta escolha tome cuidado para sempre deixar os conectores da RPi livres e de fácil acesso para conexão dos cabos.
 
-![Gateway](https://github.com/mftutui/configuracoes-gateway-ttn/blob/master/images/gateway_montado.jpg)
+![Gateway finalizado](images/gateway_caixa.jpg)
 
-Conecte a RPi e o adaptador às fontes e ao cabo Ethernet (não energize o módulo LoRa sem que a antena esteja conectada).
-
-A conexão entre a RPi e o adaptador e entre o adaptador e o módulo, usando a placa adaptadora para módulo RHF0M301 RISINGHF o encaixe acontece de forma perfeita (todos os pinos machos conectados aos fêmeas) sem a necessidade da utilização de jumpers, como pode ser visto na imagem.
-
-![Gateway finalizado](https://github.com/mftutui/configuracoes-gateway-ttn/blob/master/images/gateway_caixa.jpg)
-
-> Nessa montagem foi utilizada uma caixa protetora para abrigar o gateway. Se fizer esta escolha tome cuidado para sempre deixar as entradas da RPi livres.
-
-Caso você esteja utilizando outro modo de alimentação para o módulo LoRaWAN os pinos para a conexão entre ele e a RPi serão:
+Caso a conexão entre o módulo RF e a RPi não use uma placa adaptadora, as conexões devem ser feitas conforme a pinagem:
 
 Descricao      | Pino físico na RPi 
 :-------------:|:-----------------:
@@ -81,34 +83,33 @@ MISO           | 21
 MOSI           | 19
 NSS            | 24
 
-Agora está tudo pronto para a configuração do gateway.
+# Configuração
 
-Existem algumas opções para acessar o terminal do gateway, você pode escolher uma delas [aqui](https://www.raspberrypi.org/documentation/remote-access/ssh/). 
+Agora está tudo pronto para ligar e configurar o gateway. Para isso, você deve conseguir acessar o terminal da RPi. Existem algumas opções para isso e você pode escolher uma delas [aqui](https://www.raspberrypi.org/documentation/remote-access/ssh/). A senha padrão para o usuário **pi** é **raspberry**.
 
- - A senha default para o usuário **pi** é **raspberry**.
+Vale lembrar que o dispositivo deve estar conectado à Internet para realizar as proximas operações. Essa conexão pode ser feita via cabo ou usando o [Wi-Fi](https://www.raspberrypi.org/documentation/configuration/wireless/wireless-cli.md).
 
-## Configurações
+## Configuração da RPi
 
-Vale lembrar que o dispositivo deve estar conectado à Internet para realizar as proximas instruções. Essa conexão pode ser feita via cabo ou usando o [Wi-Fi](https://www.raspberrypi.org/documentation/configuration/wireless/wireless-cli.md).
+Já com o acesso ao terminal da RPi use o comando raspi-config para configurar local, timezone, habilitar a interface SPI e redimensionar a partição do cartão SD.
 
-### Configurações do dispositivo
-
-Já com o acesso ao terminal da RPi use o comando raspi-config para configurar local, timezone, habilitar o [SPI](https://pt.wikipedia.org/wiki/Serial_Peripheral_Interface) e [redimensionar a partição do cartão SD](https://jeffersonpalheta.wordpress.com/2017/09/25/redimensionar-particao-sd-card-raspberry-pi-raspbian-jessie/).
+Execute o seguinte comando para abrir o software de configuração da RPi:
 ```sh
 sudo raspi-config
 ```
+No menu que abre, ajuste as seguintes opções, conforme sua região:
+* 5 Localisation Options -> L1 Locale
+* 5 Localisation Options -> L2 Timezone
 
-Localization Options -> I1 Change Locale
+Em seguida, ligue a interface o SPI:
+* 3 Interface Options -> P4 SPI
 
-Localization Options -> I2 Change Timezone
+E, finalmente, expanda o tamanho da partição do sistema para que use todo o cartão microSD:
+* 6 Advanced options -> A1 Expand Filesystem
 
-Interfacing options -> P4 SPI
+Ao sair, deve surgir um pedido para reiniciar o sistema (*reboot*). Confirme e aquarde o reboot (ou use o comando *sudo reboot* para reiniciar manualmente).
 
-Advanced options -> A1 Expand filesystem
-
-Ao sair, um pedido de reboot deve surgir, confirme (ou *$ sudo reboot* para fazer manualmente).
-
-em seguida:
+Após a reinicialização, conecte novamente ao console da RPi e:
 
 * Atualize o sistema e instale o git:
 ```sh
@@ -117,65 +118,45 @@ em seguida:
  sudo apt-get install git
 ```
 
- A etapa a seguir é completamente opcional e de sua decisão!!
+## Configuração do *Gateway* LoRaWAN
 
-* Crie um novo usuário para TTN.
-```sh
- sudo adduser ttn
- sudo adduser ttn sudo
-```
-
-* De um *reboot*, logue no sistema usando o usuário *ttn* e remova o usuário default *pi*
-```sh
-sudo userdel -rf pi
-```
-
-### Configurações do *gateway*
-
-* Identificar EUI do dispositivo
+### Identificador EUI-64 do *gateway*
+O primeiro passo é identificar o EUI do gateway. O EUI é um identificador único do gateway formado por 64-bits. Neste tutorial, criaremos um EUI-64 a partir do endereço MAC de 48 bits da placa de rede da RPi.
 
 Ao conectar ao terminal da RPi digite:
 ```sh
 ifconfig
 ```
+O comando deve gerar uma saída parecida com a seguinte:
 
-Uma tela parecida com a seguinte aparecerá:
+![ifconfig - EUI](images/exemplo_ifconfig.png)
 
-![ifconfig - EUI](https://github.com/mftutui/configuracoes-gateway-ttn/blob/master/images/exemplo_ifconfig.png)
-
-O número destacado em vermelho é o endereço MAC da RPi e será a base para o *Gateway* **EUI**. A este número devem ser adicionados 2 bytes **F F** no meio, portanto:
-
+O número destacado em vermelho é o endereço MAC da RPi e será a base para o EUI-64 do *gateway*. Este número será extendido adicionando 2 bytes **FF** no meio, portanto:
 
 |    HWaddr   |       b 8 : 2 7 : e b : f 9 : f f : 2 4       |
 |:-----------:|:---------------------------------------------:|
 | **Gateway EUI** | **b 8 : 2 7 : e b : F F : FF : f 9 : f f : 2 4** |
 
+Para facilitar consultas futuras, recomendamos criar um arquivo chamado "gateway_EUI.txt" na RPi. Para isso, execute:
+```sh
+nano ~/gateway_EUI.txt
+```
+No editor de texto que abrirá, digite o número EUI-64 sem os separadores e usando caracteres maiúsculos (ex.: B827EBFFFFF9FF24). Ao final, pressione Ctrl+x para sair (e salvar o arquivo). Mantenha este número anotado para uso futuro.
 
-* Configurações remotas
+
+### Configuração remota
 
 Os gateways TTN podem ser ajustados para permitir configuração remota. Nesse caso, é verificado se há um novo arquivo de configuração em cada inicialização do dispositivo e, caso haja, o arquivo de configuração local é substituido.
 
-Para utilizar esta opção é preciso criar um arquivo JSON com o nome da EUI no repositório [ttn-zh/gateway-remote-config](https://github.com/ttn-zh/gateway-remote-config).
+Para utilizar esta opção é preciso criar um arquivo JSON com o nome da EUI no repositório [ttn-zh/gateway-remote-config](https://github.com/ttn-zh/gateway-remote-config). Isso consiste em:
 
-Que consiste em:
-
-- Criar um arquivo JSON com o **EUI** do gateway em letras maiúsculas, contendo as informações sobre o mesmo. 
-
-- O arquivo deve ser adicionado usando *Create new file*:
-
-![Create new file](https://github.com/mftutui/configuracoes-gateway-ttn/blob/master/images/create_new_file.png)
-
-> Ex: Se o gateway EUI for **B827EBFFFFF9FF24**, o arquivo deverá ser chamado **B827EBFFFFF9FF24.json**
-
-Os campos *gateway_ID*, *server_address*, *contact_email* e *description* são strings, devem conter aspas (""). 
-
-Já os campos referentes a latitude, longitude e altitude são apenas números, não levam aspas.
-
-O conteúdo do arquivo deve ser:
+- Criar um arquivo JSON com o **EUI** do gateway em letras maiúsculas, contendo as informações sobre o mesmo. O arquivo deve ser adicionado usando *Create new file*:
+![Create new file](images/create_new_file.png)
+Por exemplo, se o EUI-64 do *gateway* for **B827EBFFFFF9FF24**, o arquivo deverá ser chamado **B827EBFFFFF9FF24.json**. Os campos *gateway_ID*, *server_address*, *contact_email* e *description* são strings e devem conter aspas (""). Já os campos referentes a latitude, longitude e altitude são apenas números, não levam aspas. O conteúdo do arquivo deve ser:
 ```json
 {
   "gateway_conf": {
-    "gateway_ID": "GATEWAY_EUI",
+    "gateway_ID": "INSIRA_SEU_GATEWAY_EUI_AQUI",
     "servers": [
       {
         "server_address": "router.us.thethings.network",
@@ -184,33 +165,29 @@ O conteúdo do arquivo deve ser:
         "serv_enabled": true
       }
     ],
-    "ref_latitude": "LATITUDE",
-    "ref_longitude": "LONGITUDE",
-    "ref_altitude": "ALTITUDE",
-    "contact_email": "SEU_EMAIL",
-    "description": "Descrição do dispositivo"
+    "ref_latitude": 00.000000,
+    "ref_longitude": -00.000000,
+    "ref_altitude": 00.0,
+    "contact_email": "INSIRA_SEU_EMAIL_AQUI",
+    "description": "Uma descrição do dispositivo"
   }
 }
 ```
 
-- Propor a adição do arquivo:
+- Solicitar a adição do arquivo ao repositório:
+![Propose new file](images/propose_new_file.png)
 
-![Propose new file](https://github.com/mftutui/configuracoes-gateway-ttn/blob/master/images/propose_new_file.png)
+- Crie um *pull request* da solicitação:
+![Create pull request1](images/create_pull_request1.png)
 
-- Crie um *pull request*:
+- Confirme a solicitação:
+![Create pull request2](images/create_pull_request2.png)
 
-![Create pull request1](https://github.com/mftutui/configuracoes-gateway-ttn/blob/master/images/create_pull_request1.png)
+Agora é só esperar que o moderador do serviço de configuração remota aceite a solicitação.
 
-- Confirme:
+### Instalando serviços do *gateway* LoRaWAN
 
-![Create pull request2](https://github.com/mftutui/configuracoes-gateway-ttn/blob/master/images/create_pull_request2.png)
-
-Agora é só esperar ele ser inserido (não deve demorar muito caso os dados estejam coerentes, você deve receber um email com a confirmação).
-
-* Dando sequencia as configurações:
-
-- Clonar e executar os seguintes repositórios
-
+Os serviços necessários para que o gateway opere serão obtidos no github e postos em execução. O primeiro passo é clonar os seguintes repositórios e construir os serviços. Estando conectado no terminal da RPi, execute:
 ```sh
 cd /opt
 sudo git clone https://github.com/Lora-net/packet_forwarder
@@ -224,29 +201,21 @@ cd /opt/packet_forwarder
 sudo make -j4
 ```
 
-* Remova o arquivo **global_config.json** (que está em: *$ cd lora_pkt_fwd*) 
-
+Feito isso, vamos configurar o serviço packet_forwarder para o nosso gateway:
+* Remova o arquivo **global_config.json** instalado por padrão:
 ```sh
 sudo rm -rf /opt/packet_forwarder/lora_pkt_fwd/global_config.json
 ```
-
-* Crie um novo (em /opt/packet_forwarder/lora_pkt_fwd/) com o conteúdo disponibilizado no arquivo **US-global_conf.json** que se encontra [neste](https://github.com/TheThingsNetwork/gateway-conf/) repositório
-
+* Crie um novo (em /opt/packet_forwarder/lora_pkt_fwd/) com o conteúdo disponibilizado no arquivo **AU-global_conf.json** que se encontra [neste](https://github.com/TheThingsNetwork/gateway-conf/) repositório:
 ```sh
 cd /opt/packet_forwarder/lora_pkt_fwd/
-sudo curl -o global_conf.json https://raw.githubusercontent.com/TheThingsNetwork/gateway-conf/master/US-global_conf.json
+sudo curl -o global_conf.json https://raw.githubusercontent.com/TheThingsNetwork/gateway-conf/master/AU-global_conf.json
 ```
 
-* Substitua o **gateway_ID** no arquivo **local_config.json** pelo EUI do *gateway*
-
+* Substitua o **gateway_ID** no arquivo **local_config.json** pelo EUI-64 do *gateway*:
 ```sh
 sudo nano /opt/packet_forwarder/lora_pkt_fwd/local_conf.json
 ```
-
-> Fique a vontade para usar o editor de texto que preferir
-
-Conteudo:
-
 ```
 {
 /* Put there parameters that are different for each gateway (eg. pointing one gateway to a test server while the others stay in production) */
@@ -257,9 +226,9 @@ Conteudo:
 }
 ```
 
-### Utilização do gateway em *background*
+### Habilitando serviço no gateway
 
-* Configure o *service* no *systemd* criando o arquivo *gateway.service*
+* Configure o serviço no *systemd* criando o arquivo *gateway.service*
 ```sh
 sudo nano /etc/systemd/system/gateway.service
 ```
@@ -280,9 +249,7 @@ RestartSec=10
 WantedBy=multi-user.target
 ```
 
-* Iniciar o *service*
-
-Execute as seguintes linhas para que o script do gateway rode em *background* sempre que o RPi for inicializado:
+* Para iniciar o serviço, execute as seguintes linhas para que o script do gateway rode em *background* sempre que o RPi for inicializado:
 ```sh
 sudo systemctl daemon-reload
 sudo systemctl enable gateway
@@ -293,53 +260,47 @@ sudo systemctl start gateway
 ```sh
 sudo systemctl status gateway -l
 ```
-* Possível problema em versões mais novas do Raspbian:
+
+>Possível problema em versões mais novas do Raspbian:
 ```sh
 lora_pkt_fwd[638]: ERROR: Failed to load fw 1
 lora_pkt_fwd[638]: ERROR: Version of calibration firmware not expected, actual:0 expected:2
 lora_pkt_fwd[638]: ERROR: [main] failed to start the concentrator
 ```
-Isso ocorre porque o novo kernel Linux bloqueia o GPIO07 por ser utilizado pelo SPI. Solução: adicione a linha abaixo ao final do arquivo /boot/config.txt, supondo que o pino GPIO04 está livre em sua placa. Senão, substitua '4' pelo número de qualquer outro GPIO não utilizado.
+>Isso ocorre porque o novo kernel Linux bloqueia o GPIO07 por ser utilizado pelo SPI, e este pino é necessário para a comunicação entre a RPi e o módulo de RF. **Solução:** adicione a linha abaixo **ao final** do arquivo /boot/config.txt (use o comando "sudo nano /boot/config.txt").
 ```
 dtoverlay=spi0-cs,cs1_pin=4
 ```
+>Esta solução supõe que o pino GPIO04 está livre em sua placa. Se não estiver, substitua '4' pelo número de qualquer outro GPIO não utilizado.
 
-## Registro na TTN
+# Registro na TTN
 
 Agora você pode registrar o seu gateway na TTN!
 
-* Partindo do princípio que você já possui uma conta na TTN e está logada nela vá para o **Console**
+* Neste ponto, partimos do princípio que você já possui uma conta na TTN. Neste caso, entre no [site da TTN](https://www.thethingsnetwork.org/), navegue até o **Console**, e selecione a região onde deseja registrar seu gateway (para o Brasil, usamos "North America 1"):
+![Console](images/console_1.png)
 
-![Console](https://github.com/mftutui/configuracoes-gateway-ttn/blob/master/images/console_1.png)
+* Na tela inicial do console, clique em **Gateways**
+![Gateway](images/console_2.png)
 
-* Clique em **Gateways**
+* Na tela que surge, clique em *+ Add gateway*
+![registrar_gateway](images/console_3.png)
 
-![Gateway](https://github.com/mftutui/configuracoes-gateway-ttn/blob/master/images/console_2.png)
+* No formulário que surge, preencha os campos do seguinte modo:
+  * Na seção "General Settings":
+    * Owner: usuário ou organização proprietária do *gateway*.
+    * Gateway ID: nome identificador do gateway (ex.: indoor-gateway-01). Este nome será usado para identificar o gateway nos serviços da TTN, deve ser único na sua conta, e deve ser formado por caracteres alfanuméricos separados por hífen.
+    * Gateway EUI : EUI-64 do *gateway* identificado anteriormente.
+    * Gateway name: Um nome "humanizado" para o gateway (ex.: Gateway Indoor 01).
+    * Gateway description: Descrição simplificada para o seu gateway, que pode ser utilizada para manter anotações importantes sobre o equipamento.
+    * Deixe as opções "Require authenticated connection", "Gateway status" e "Gateway location" com suas configurações padrão.
+  * Na seção "LoRaWAN options":
+    * Frequency Plan: Frequência utilizada pelo gateway. Selecionar "Australia 915-928 MHz, FSB 2 (used by TTN).
+    * Deixe as demais opções com seus valores padrão.
+  * Clique em *Create gateway*.
+![register](images/register_ok.png)
 
-* *register gateway*
+* Se tudo estiver OK, o *gateway* já deve estar enviando mensagens para o servidor. Para verificar, clique em *Gateways* no menu superior do console da TTN. Na tela que abre, clique sobre o identificador do *gateway* que você acabou de criar. Uma imagem similar à seguinte deve aparecer:
+![connected](images/gateway_ok.png)
 
-![registrar_gateway](https://github.com/mftutui/configuracoes-gateway-ttn/blob/master/images/console_3.png)
-
-* Marque a opção *I'm using the legacy packet forwarder*
-
-![box](https://github.com/mftutui/configuracoes-gateway-ttn/blob/master/images/box.png)
-
-* Complete as informações restantes
-
-- Gateway EUI : Identidade previamente identificada
-- Description: Descrição simplificada para o seu gateway
-- Frequency Plan: Frequência utilizada pelo gateway
-- Router: O roteado mais proximo ao seu gateway
-- Antenna Placement: Onde a antena está localizada
-
-* e finalmente *Register Gateway*
-
-![register](https://github.com/mftutui/configuracoes-gateway-ttn/blob/master/images/register_ok.png)
-
-* Se tudo estiver ok, o status do gateway deve ser *conected*
-
-![connected](https://github.com/mftutui/configuracoes-gateway-ttn/blob/master/images/gateway_ok.png)
-
-* Caso o gateway não esteja conectado tente reiniciá-lo. Se persistir, verifique os padrões de *firewall* utilizados.
-
-> [Tutorial](https://github.com/mftutui/ttn-first-steps) para o desenvolvimento de uma aplicação para uso na TTN usando The Things UNO
+* Por padrão, o gateway envia a cada 30s um relatório com estatísticas de pacotes processados. Estas estatísticas devem aparecer na seção "Live data".
